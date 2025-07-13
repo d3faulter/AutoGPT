@@ -27,6 +27,7 @@ services:
     extends:
       file: ./docker-compose.platform.yml
       service: migrate
+      
 
   redis:
     <<: *agpt-services
@@ -102,6 +103,8 @@ services:
     extends:
       file: ./db/docker/docker-compose.yml
       service: kong
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
   auth:
     <<: *supabase-services
@@ -109,25 +112,32 @@ services:
       file: ./db/docker/docker-compose.yml
       service: auth
     environment:
-      GOTRUE_MAILER_AUTOCONFIRM: true
+      - GOTRUE_MAILER_AUTOCONFIRM=true
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
   rest:
     <<: *supabase-services
     extends:
       file: ./db/docker/docker-compose.yml
       service: rest
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
   realtime:
     <<: *supabase-services
     extends:
       file: ./db/docker/docker-compose.yml
       service: realtime
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
   storage:
     <<: *supabase-services
     extends:
       file: ./db/docker/docker-compose.yml
       service: storage
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
   imgproxy:
     <<: *supabase-services
@@ -140,18 +150,24 @@ services:
     extends:
       file: ./db/docker/docker-compose.yml
       service: meta
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
   functions:
     <<: *supabase-services
     extends:
       file: ./db/docker/docker-compose.yml
       service: functions
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
   analytics:
     <<: *supabase-services
     extends:
       file: ./db/docker/docker-compose.yml
       service: analytics
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}    
 
   db:
     <<: *supabase-services
@@ -160,6 +176,8 @@ services:
       service: db
     ports:
       - ${POSTGRES_PORT}:5432 # We don't use Supavisor locally, so we expose the db directly.
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 
   vector:
     <<: *supabase-services
